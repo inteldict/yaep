@@ -37,10 +37,14 @@ public class Rule {
         for (int i = 0; i < dot && i < rhs.length; i++) {
             beforeDot.append(rhs[i]).append(" ");
         }
-        for (int i = dot; i < rhs.length; i++) {
-            afterDot.append(rhs[i]).append(" ");
+        if (dot < rhs.length) {
+            for (int i = dot; i < rhs.length; i++) {
+                afterDot.append(rhs[i]).append(" ");
+            }
+            afterDot.deleteCharAt(afterDot.length() - 1);
+            afterDot.insert(0, ' ');
         }
-        beforeDot.append(" * ").append(afterDot);
+        beforeDot.append("*").append(afterDot);
         return beforeDot.toString();
     }
 
