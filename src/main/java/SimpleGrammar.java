@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -67,14 +66,14 @@ public class SimpleGrammar extends Grammar {
 
                     // Build rules
                     List<Rule> lhsRules = rhs.parallelStream().filter(p -> !p.isEmpty()).map(sublist -> {
-                        String firstItem = sublist.get(0);
-                        if (firstItem.startsWith("\"") || firstItem.startsWith("'")) {    // right part is a terminal
-                            Matcher quoteMatcher = QUOTE_PATTERN.matcher(firstItem);
-                            POS.add(lhs);
-                            return new TerminalRule(lhs, quoteMatcher.replaceAll(""));
-                        } else {    // right part is a non-terminal
-                            return new NonTerminalRule(lhs, sublist.stream().map(NT::new).toArray(NT[]::new));
-                        }
+                        return new Rule(lhs, sublist.stream().map(item -> {
+                            if (item.startsWith("\"") || item.startsWith("'")) {    // symbol is a terminal
+                                Matcher quoteMatcher = QUOTE_PATTERN.matcher(item);
+                                return quoteMatcher.replaceAll("");
+                            } else {    // right part is a non-terminal
+                                return new NT(item);
+                            }
+                        }).toArray(CharSequence[]::new));
                     }).collect(Collectors.toList());
 
                     // Add rules to the grammar

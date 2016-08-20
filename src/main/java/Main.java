@@ -22,11 +22,11 @@ public class Main {
         String sentence = out.toString();
         System.out.println(
                 "\nSentence: \"" + sentence + "\"");
-        boolean successful =
-                parser.parseSentence(sent);
-        System.out.println(
-                "Parse Successful:" + successful);
-        Chart[] charts = parser.getCharts();
+        Chart[] charts =
+                parser.parse(sent);
+//        System.out.println(
+//                "Parse Successful:" + successful);
+//        Chart[] charts = parser.getCharts();
         System.out.println("");
         System.out.println("Charts produced by the sentence: " + sentence);
         for (int i = 0; i < charts.length; i++) {

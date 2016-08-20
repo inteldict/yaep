@@ -2,19 +2,46 @@
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
  */
-public abstract class Rule {
+public class Rule {
 
     protected final NT lhs;
 
-    public Rule(NT lhs) {
+    protected final CharSequence[] rhs;
+
+    public Rule(NT lhs, CharSequence[] rhs) {
         this.lhs = lhs;
+        this.rhs = rhs;
     }
 
-    public abstract int getRHSLength();
+    public int getRHSLength() {
+        return rhs.length;
+    }
 
-    public abstract boolean isTerminal(int index);
+    public boolean isTerminal(int index) {
+        assert index >= 0 && index < rhs.length;
 
-    public abstract Object getSymbol(int index);
+        return !(rhs[index] instanceof NT);
+    }
 
-    public abstract String toStringWithDot(int dot);
+    public CharSequence getSymbol(int index) {
+        assert index >= 0 && index < rhs.length;
+
+        return rhs[index];
+    }
+
+    public String toStringWithDot(int dot) {
+        assert dot >= 0 && dot <= rhs.length;
+
+        StringBuilder beforeDot = new StringBuilder();
+        StringBuilder afterDot = new StringBuilder();
+        for (int i = 0; i < dot && i < rhs.length; i++) {
+            beforeDot.append(rhs[i]).append(" ");
+        }
+        for (int i = dot; i < rhs.length; i++) {
+            afterDot.append(rhs[i]).append(" ");
+        }
+        beforeDot.append(" * ").append(afterDot);
+        return beforeDot.toString();
+    }
+
 }

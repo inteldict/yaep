@@ -8,6 +8,7 @@ public class Chart {
 
     protected final ArrayList<State> states = new ArrayList<State>();
 
+
     public void addState(State s) {
         if (!states.contains(s)) {
             states.add(s);

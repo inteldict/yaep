@@ -20,7 +20,11 @@ public class State {
         this.parentState = parentState;
     }
 
-    public Object getNextSymbol() {
+    public boolean isNextSymbolTerminal() {
+        return rule.isTerminal(dot);
+    }
+
+    public CharSequence getNextSymbol() {
         return rule.getSymbol(dot);
     }
 
