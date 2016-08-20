@@ -1,0 +1,14 @@
+# grammar
+
+S -> NP VP
+NP -> NP PP
+NP -> Noun
+VP -> VP PP
+VP -> Verb NP
+PP -> Prep NP
+
+# lexicon
+
+Noun -> "John" | 'Mary' | "Denver"
+Verb -> "called"
+Prep -> "from"
