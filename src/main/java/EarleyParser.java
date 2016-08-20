@@ -18,6 +18,7 @@ public class EarleyParser {
     }
 
     private void init(String[] words) {
+        this.words = words;
         charts = new Chart[words.length + 1];
         for (int i = 0; i < charts.length; i++) {
             charts[i] = new Chart();
@@ -26,9 +27,11 @@ public class EarleyParser {
 
     public Chart[] parse(String[] words) {
         init(words);
+
         Rule initRule = new Rule(new NT("^"), new NT[]{new NT("S")});
         State initState = new State(initRule, 0, 0, 0, null);
         charts[0].addState(initState);
+
         Chart currentChart;
         for (int i = 0; i < words.length; i++) {
             currentChart = charts[i];

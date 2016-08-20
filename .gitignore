@@ -1,3 +1,22 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.min*.js
+*.min*.css
+
+#special for Mac Os
+*.DS_Store
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# custom directories
 node_modules
 index
 target/*
@@ -7,13 +26,4 @@ build/*
 .idea/
 .gradle/
 inteldict.iml
-src/main/gwt-unitCache/*
-src/main/webapp/IntelDict/*
-src/main/webapp/WEB-INF/classes/*
-src/main/webapp/WEB-INF/deploy/*
-src/main/webapp/WEB-INF/lib/*
-*.war
-*.min*.js
-*.min*.css
-#special for Mac Os
-*.DS_Store
+
