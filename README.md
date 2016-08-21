@@ -36,9 +36,3 @@ The implementation includes a grammar loader. See *resources* for grammar exampl
 You can find a detailed algorithm description here:
 
 [Jurafsky D., Martin J.H. Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition](http://amzn.to/2bxdt0g)
-
- qooxdoo application skeleton which is used as a template. The
-'create-application.py' script (usually under tool/bin/create-application.py)
-will use this and expand it into a self-contained qooxdoo application which
-can then be further extended. Please refer to the script and other documentation
-for further information.

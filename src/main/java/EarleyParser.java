@@ -1,20 +1,20 @@
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
  */
 public class EarleyParser {
+
     private Grammar grammar;
     private String[] words;
     private Chart[] charts;
 
-    public EarleyParser(Grammar g) {
-        grammar = g;
-    }
+    private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    public Chart[] getCharts() {
-        return charts;
+    public EarleyParser(Grammar grammar) {
+        this.grammar = grammar;
     }
 
     private void init(String[] words) {
@@ -25,6 +25,25 @@ public class EarleyParser {
         }
     }
 
+    /**
+     *  Wrapper of the parse method measures the parsing time of the input string
+     * @see Chart[] parse(String[] words)
+     *
+     * @param words - tokenized input string
+     * @return charts
+     */
+    public Chart[] parseOnTime(String[] words) {
+        long startTime = System.currentTimeMillis();
+        Chart[]  result = parse(words);
+        log.info(() -> "Parsing time: " + (System.currentTimeMillis() - startTime) + "ms");
+        return result;
+    }
+
+    /**
+     * coordinates Earley's predictor/scanner/completer
+     * @param words
+     * @return
+     */
     public Chart[] parse(String[] words) {
         init(words);
 
@@ -57,6 +76,11 @@ public class EarleyParser {
         return charts;
     }
 
+    /**
+     * For the state in S(i) of the form (X → α • Y β, j), add (Y → • γ, i) to S(i) for every production in the grammar with Y on the left-hand side (Y → γ)
+     * @param state
+     * @param i - state index
+     */
     private void predictor(State state, int i) {
         CharSequence lhs = state.getNextSymbol();
         List<Rule> rules = grammar.rules.get(lhs);
@@ -65,12 +89,23 @@ public class EarleyParser {
         }
     }
 
+    /**
+     * Compares the next symbol in the input stream with the next symbol of the form (X → α • a β, i), if it matchses add (X → α a • β, i) to S(i+1).
+     * @param state
+     * @param i
+     * @param word
+     */
     private void scanner(State state, int i, String word) {
         if (word.equals(state.getNextSymbol())) {
             charts[i + 1].addState(new State(state.rule, i, i + 1, state.dot + 1, state));
         }
     }
 
+    /**
+     * For the completed state in S(i) of the form (X → γ •, j), find states in S(j) of the form (Y → α • X β, k) and add (Y → α X • β, k) to S(i).
+     * @param state
+     * @param i
+     */
     private void completer(State state, int i) {
         NT lhs = state.rule.lhs;
         Chart currentChart = charts[i];
