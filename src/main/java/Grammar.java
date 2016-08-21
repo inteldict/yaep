@@ -9,5 +9,4 @@ import java.util.List;
 public class Grammar {
 
     protected HashMap<NT, List<Rule>> rules = new HashMap<>();
-    protected HashSet<NT> POS = new HashSet<>();
 }

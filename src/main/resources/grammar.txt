@@ -9,6 +9,6 @@ PP -> Prep NP
 
 # lexicon
 
-Noun -> "John" | 'Mary' | "Denver"
+Noun -> "Jan" | 'Mary' | "Frankfurt"
 Verb -> "called"
 Prep -> "from"

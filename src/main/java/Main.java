@@ -6,12 +6,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String[] sentence1 = {"John", "called", "Mary"};
-        String[] sentence2 = {"John", "called", "Mary", "from", "Denver"};
+        String[] sentence1 = {"Mary", "called", "Jan"};
+        String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
         EarleyParser parser = new EarleyParser(grammar);
         test(sentence1, parser);
-//        test(sentence2, parser);
+        test(sentence2, parser);
     }
 
     static void test(String[] sent, EarleyParser parser) {

@@ -42,7 +42,7 @@ public class SimpleGrammar extends Grammar {
                 while (ntMatcher.find()) {
                     list.add(ntMatcher.group(1));
                 }
-                if (LHS_RHS_DELIM.equals(list.get(1))) {    // Each lhs schould be splitted from rhs by LHS_RHS_DELIM
+                if (LHS_RHS_DELIM.equals(list.get(1))) {    // Each lhs should be splitted from rhs by LHS_RHS_DELIM
                     NT lhs = new NT(list.get(0));
 
                     // Processing ot the right part of the rule like A -> B | C | D
