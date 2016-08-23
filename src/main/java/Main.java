@@ -14,7 +14,7 @@ public class Main {
         String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
         EarleyParser parser = new EarleyParser(grammar);
-        test(sentence1, parser);
+//        test(sentence1, parser);
         test(sentence2, parser);
     }
 
@@ -32,5 +32,7 @@ public class Main {
             }
             return chartOutput.toString();
         });
+        ParseTreeGenerator parseTreeGenerator = new ParseTreeGenerator(charts);
+        parseTreeGenerator.parseTrees();
     }
 }
