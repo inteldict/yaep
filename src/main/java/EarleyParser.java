@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -37,9 +39,10 @@ public class EarleyParser {
      * @return charts
      */
     public Chart[] parseOnTime(String[] words) {
-        long startTime = System.currentTimeMillis();
+        Instant start = Instant.now();
         Chart[]  result = parse(words);
-        log.info(() -> "Parsing time: " + (System.currentTimeMillis() - startTime) + "ms");
+        Duration timeElapsed = Duration.between(start, Instant.now());
+        log.info(() -> "Parsing time: " + timeElapsed.toMillis() + "ms");
         return result;
     }
 

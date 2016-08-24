@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +21,10 @@ public class ParseTreeGenerator {
     }
 
     public List<Node> parseTreesOnTime() {
-        long startTime = System.currentTimeMillis();
+        Instant start = Instant.now();
         List<Node> result = parseTrees();
-        log.info(() -> "Building trees time: " + (System.currentTimeMillis() - startTime) + "ms");
+        Duration timeElapsed = Duration.between(start, Instant.now());
+        log.info(() -> "Building trees time: " + timeElapsed.toMillis() + "ms");
         return result;
     }
 
