@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,14 +12,21 @@ public class State {
     protected final Rule rule;
     protected final int i, j;
     protected final int dot;
-    protected final State parentState;
+    protected final List<State> parentStates = new ArrayList<>();
 
-    public State(Rule rule, int i, int j, int dot, State parentState) {
+    public State(Rule rule, int i, int j, int dot, List<State> parentStates) {
         this.rule = rule;
         this.i = i;
         this.j = j;
         this.dot = dot;
-        this.parentState = parentState;
+        this.parentStates.addAll(parentStates);
+    }
+
+    public State(Rule rule, int i, int j, int dot) {
+        this.rule = rule;
+        this.i = i;
+        this.j = j;
+        this.dot = dot;
     }
 
     public boolean isNextSymbolTerminal() {
@@ -51,5 +60,9 @@ public class State {
     @Override
     public String toString() {
         return String.format("[%d:%d] %s %s %s", i,j, rule.lhs.symbol, SimpleGrammar.LHS_RHS_DELIM, rule.toStringWithDot(dot));
+    }
+
+    public List<State> getParentStates() {
+        return parentStates;
     }
 }

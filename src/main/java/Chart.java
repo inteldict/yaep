@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Denis Krusko
@@ -6,8 +7,7 @@ import java.util.ArrayList;
  */
 public class Chart {
 
-    protected final ArrayList<State> states = new ArrayList<State>();
-
+    protected final ArrayList<State> states = new ArrayList<>();
 
     public void addState(State s) {
         if (!states.contains(s)) {
