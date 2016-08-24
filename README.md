@@ -6,7 +6,7 @@ and cubic time *O(n^3)* in the worst case (*'n'* - is the length of the input).
 ## Grammar
 
 The parser is suitable for processing any context-free language using an appropriate context-free grammar (CFG).
-Unlike LL, LR, LALR parsers, requirements for the Earley Parser grammar are more general and a grammar can be
+Unlike LL, LR, LALR parsers, requirements for the Earley Parser grammar are more general and the grammar can be
  easily written by hand.
 
  At present the parser can load grammars in the form:

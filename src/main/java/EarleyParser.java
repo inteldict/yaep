@@ -11,6 +11,9 @@ public class EarleyParser {
     private String[] words;
     private Chart[] charts;
 
+    public final static Rule initRule = new Rule(new NT("TOP"), new NT[]{new NT("S")});
+    public final static State initState = new State(initRule, 0, 0, 0, null);
+
     private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public EarleyParser(Grammar grammar) {
@@ -47,8 +50,6 @@ public class EarleyParser {
     public Chart[] parse(String[] words) {
         init(words);
 
-        Rule initRule = new Rule(new NT("^"), new NT[]{new NT("S")});
-        State initState = new State(initRule, 0, 0, 0, null);
         charts[0].addState(initState);
 
         Chart currentChart;

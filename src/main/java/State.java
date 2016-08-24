@@ -10,7 +10,7 @@ public class State {
     protected final Rule rule;
     protected final int i, j;
     protected final int dot;
-    private State parentState;
+    protected final State parentState;
 
     public State(Rule rule, int i, int j, int dot, State parentState) {
         this.rule = rule;
