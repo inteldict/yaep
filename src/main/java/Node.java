@@ -22,6 +22,11 @@ public class Node implements INode {
         children.addAll(node.getChildren());
     }
 
+    public Node(Node node, INode child) {
+        this(node);
+        children.add(child);
+    }
+
     public Node(CharSequence symbol) {
         this.symbol = symbol;
     }

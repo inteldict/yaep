@@ -34,7 +34,7 @@ public class Main {
             return chartOutput.toString();
         });
         ParseTreeGenerator parseTreeGenerator = new ParseTreeGenerator(charts);
-        List<Node> trees = parseTreeGenerator.parseTrees();
+        List<Node> trees = parseTreeGenerator.parseTreesOnTime();
         log.info(() -> {
             StringBuilder treeOutput = new StringBuilder();
             for (Node tree : trees) {
