@@ -15,7 +15,7 @@ public class Main {
         String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
         EarleyParser parser = new EarleyParser(grammar);
-        test(sentence1, parser);
+//        test(sentence1, parser);
         test(sentence2, parser);
     }
 
@@ -34,10 +34,10 @@ public class Main {
             return chartOutput.toString();
         });
         ParseTreeGenerator parseTreeGenerator = new ParseTreeGenerator(charts);
-        List<Node> trees = parseTreeGenerator.parseTreesOnTime();
+        List<INode> trees = parseTreeGenerator.parseTreesOnTime();
         log.info(() -> {
             StringBuilder treeOutput = new StringBuilder();
-            for (Node tree : trees) {
+            for (INode tree : trees) {
                 treeOutput.append(tree.prettyPrint(0)).append('\n');
             }
             return treeOutput.toString();

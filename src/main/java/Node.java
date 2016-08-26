@@ -85,6 +85,10 @@ public class Node implements INode {
         return children;
     }
 
+    public void setChildren(List<INode> children) {
+        this.children = children;
+    }
+
     @Override
     public CharSequence getSymbol() {
         return symbol;

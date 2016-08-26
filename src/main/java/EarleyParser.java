@@ -2,6 +2,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -120,7 +121,15 @@ public class EarleyParser {
                 .forEach(st -> {
                     List<State> parentStates = new ArrayList<State>(st.parentStates);
                     parentStates.add(state);
-                    currentChart.addState(new State(st.rule, st.i, i, st.dot + 1, parentStates));
+                    State newState;
+                    // if this state already exists add link to another reduce possibility
+                    if (!currentChart.addState(newState = new State(st.rule, st.i, i, st.dot + 1, parentStates))) {
+                        Optional<State> existingState = currentChart.states.stream().filter(chartState -> chartState.equals(newState)).findFirst();
+                        existingState.ifPresent(ex -> {
+                            ex.addParentState(state);
+                            System.out.println(ex.parentStates);
+                        });
+                    }
                 });
     }
 }

@@ -9,10 +9,11 @@ public class Chart {
 
     protected final ArrayList<State> states = new ArrayList<>();
 
-    public void addState(State s) {
+    public boolean addState(State s) {
         if (!states.contains(s)) {
-            states.add(s);
+            return states.add(s);
         }
+        return false;
     }
 
     public State getState(int i) {
