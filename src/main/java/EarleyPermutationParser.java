@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
  */
-public class EarleyParser implements IEarley {
+public class EarleyPermutationParser implements IEarley {
 
     private Grammar grammar;
     private Chart[] charts;
@@ -18,7 +18,7 @@ public class EarleyParser implements IEarley {
 
     private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    public EarleyParser(Grammar grammar) {
+    public EarleyPermutationParser(Grammar grammar) {
         this.grammar = grammar;
     }
 
@@ -62,7 +62,7 @@ public class EarleyParser implements IEarley {
                 if (st.isFinished()) {
                     completer(st, i);
                 } else if (st.isNextSymbolTerminal()) {
-                        scanner(st, i, words[i]);
+                    scanner(st, i, words[i]);
                 } else {
                     predictor(st, i);
                 }

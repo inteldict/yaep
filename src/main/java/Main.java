@@ -14,12 +14,12 @@ public class Main {
         String[] sentence1 = {"Mary", "called", "Jan"};
         String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
-        EarleyParser parser = new EarleyParser(grammar);
+        IEarley parser = new EarleyPermutationParser(grammar);
         test(sentence1, parser);
-        test(sentence2, parser);
+//        test(sentence2, parser);
     }
 
-    static void test(String[] sent, EarleyParser parser) {
+    static void test(String[] sent, IEarley parser) {
         StringBuffer out = new StringBuffer();
         for (int i = 0; i < sent.length - 1; i++)
             out.append(sent[i] + " ");
