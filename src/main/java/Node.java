@@ -1,9 +1,7 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
+import static java.util.Map.Entry;
 /**
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
@@ -14,12 +12,14 @@ public class Node implements INode {
     private Integer from;
     private Integer to;
     private List<INode> children = new ArrayList<>();
+    public HashMap<String, Integer> wordsMap = new HashMap<>();
 
     public Node(Node node) {
         this.symbol = node.getSymbol();
         this.from = node.getFrom();
         this.to = node.getTo();
         children.addAll(node.getChildren());
+        wordsMap.putAll(node.wordsMap);
     }
 
     public Node(Node node, INode child) {
@@ -110,5 +110,23 @@ public class Node implements INode {
 
     public void setTo(Integer to) {
         this.to = to;
+    }
+
+    final Map<CharSequence, Integer> wordsMap() {
+        List<Map<CharSequence, Integer>> childMaps = new ArrayList<>();
+
+        for (INode node : children) {
+            if (node instanceof Node) {
+                childMaps.add(((Node) node).wordsMap());
+            } else {
+                Map<CharSequence, Integer> wordsMap = new HashMap<>();
+                wordsMap.put(node.getSymbol(), 1);
+                childMaps.add(wordsMap);
+            }
+        }
+
+        return childMaps.stream()
+                .flatMap(m ->  m.entrySet().stream())
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a,b) -> a + b));
     }
 }

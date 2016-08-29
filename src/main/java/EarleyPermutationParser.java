@@ -16,25 +16,27 @@ public class EarleyPermutationParser implements IEarley {
     private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Grammar grammar;
     private Chart[] charts;
-    HashMap<String, List<Integer>> wordsMap = new HashMap<>();
+    public final HashMap<String, Integer> wordsMap = new HashMap<>();
 
     public EarleyPermutationParser(Grammar grammar) {
         this.grammar = grammar;
     }
 
     private void init(String[] words) {
-        List<Integer> indexes;
+        if (!wordsMap.isEmpty()) {
+            wordsMap.clear();
+        }
+
+        Integer index;
         charts = new Chart[words.length + 1];
         for (int i = 0; i < words.length; i++) {
             charts[i] = new Chart();
-
-            if ((indexes = wordsMap.get(words[i])) == null) {
-                indexes = new ArrayList<>();
-                indexes.add(i);
-                wordsMap.put(words[i], indexes);
+            if ((index = wordsMap.get(words[i])) == null) {
+                index = 1;
             } else {
-                indexes.add(i);
+                index++;
             }
+            wordsMap.put(words[i], index);
         }
         charts[words.length] = new Chart();
     }
