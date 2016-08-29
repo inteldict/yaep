@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Denis Krusko
@@ -10,22 +8,12 @@ import java.util.Objects;
 public class State {
 
     protected final Rule rule;
-    protected final int i, j;
+    protected final int i;
     protected final int dot;
-    protected final List<State> parentStates = new ArrayList<>();
 
-    public State(Rule rule, int i, int j, int dot, List<State> parentStates) {
+    public State(Rule rule, int i, int dot) {
         this.rule = rule;
         this.i = i;
-        this.j = j;
-        this.dot = dot;
-        this.parentStates.addAll(parentStates);
-    }
-
-    public State(Rule rule, int i, int j, int dot) {
-        this.rule = rule;
-        this.i = i;
-        this.j = j;
         this.dot = dot;
     }
 
@@ -47,22 +35,21 @@ public class State {
         if (o == null || getClass() != o.getClass()) return false;
         State state = (State) o;
         return i == state.i &&
-                j == state.j &&
                 dot == state.dot &&
                 Objects.equals(rule, state.rule);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rule, i, j, dot);
+        return Objects.hash(rule, i, dot);
     }
 
     @Override
     public String toString() {
-        return String.format("[%d:%d] %s %s %s", i,j, rule.lhs.symbol, SimpleGrammar.LHS_RHS_DELIM, rule.toStringWithDot(dot));
+        return String.format("[%d:..] %s %s %s", i, rule.lhs.symbol, SimpleGrammar.LHS_RHS_DELIM, rule.toStringWithDot(dot));
     }
 
-    public List<State> getParentStates() {
-        return parentStates;
+    public String toString(int j) {
+        return String.format("[%d:%d] %s %s %s", i,j, rule.lhs.symbol, SimpleGrammar.LHS_RHS_DELIM, rule.toStringWithDot(dot));
     }
 }

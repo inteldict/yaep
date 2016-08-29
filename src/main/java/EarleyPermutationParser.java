@@ -1,6 +1,7 @@
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,35 +11,44 @@ import java.util.logging.Logger;
  */
 public class EarleyPermutationParser implements IEarley {
 
+    public static final Rule INIT_RULE = new Rule(new NT("TOP"), new NT[]{new NT("S")});
+    public static final State INIT_STATE = new State(INIT_RULE, 0, 0);
+    private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Grammar grammar;
     private Chart[] charts;
-
-    public static final Rule INIT_RULE = new Rule(new NT("TOP"), new NT[]{new NT("S")});
-    public static final State INIT_STATE = new State(INIT_RULE, 0, 0, 0);
-
-    private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    HashMap<String, List<Integer>> wordsMap = new HashMap<>();
 
     public EarleyPermutationParser(Grammar grammar) {
         this.grammar = grammar;
     }
 
     private void init(String[] words) {
+        List<Integer> indexes;
         charts = new Chart[words.length + 1];
-        for (int i = 0; i < charts.length; i++) {
+        for (int i = 0; i < words.length; i++) {
             charts[i] = new Chart();
+
+            if ((indexes = wordsMap.get(words[i])) == null) {
+                indexes = new ArrayList<>();
+                indexes.add(i);
+                wordsMap.put(words[i], indexes);
+            } else {
+                indexes.add(i);
+            }
         }
+        charts[words.length] = new Chart();
     }
 
     /**
-     *  Wrapper of the parse method measures the parsing time of the input string
-     * @see Chart[] parse(String[] words)
+     * Wrapper of the parse method measures the parsing time of the input string
      *
      * @param words - tokenized input string
      * @return charts
+     * @see Chart[] parse(String[] words)
      */
     public Chart[] parseOnTime(String[] words) {
         Instant start = Instant.now();
-        Chart[]  result = parse(words);
+        Chart[] result = parse(words);
         Duration timeElapsed = Duration.between(start, Instant.now());
         log.info(() -> "Parsing time: " + timeElapsed.toMillis() + "ms");
         return result;
@@ -46,6 +56,7 @@ public class EarleyPermutationParser implements IEarley {
 
     /**
      * coordinates Earley's predictor/scanner/completer
+     *
      * @param words
      * @return
      */
@@ -80,31 +91,35 @@ public class EarleyPermutationParser implements IEarley {
 
     /**
      * For the state in S(i) of the form (X → α • Y β, j), add (Y → • γ, i) to S(i) for every production in the grammar with Y on the left-hand side (Y → γ)
+     *
      * @param state
-     * @param i - state index
+     * @param i     - state index
      */
     public void predictor(State state, int i) {
         CharSequence lhs = state.getNextSymbol();
         List<Rule> rules = grammar.rules.get(lhs);
         for (Rule rule : rules) {
-            charts[i].addState(new State(rule, i, i, 0));
+            charts[i].addState(new State(rule, i, 0));
         }
     }
 
     /**
      * Compares the next symbol in the input stream with the next symbol of the form (X → α • a β, i), if it matchses add (X → α a • β, i) to S(i+1).
+     *
      * @param state
      * @param i
      * @param word
      */
     public void scanner(State state, int i, String word) {
-        if (word.equals(state.getNextSymbol())) {
-            charts[i + 1].addState(new State(state.rule, i, i + 1, state.dot + 1));
+        // 1st: check if symbol in input
+        if (wordsMap.containsKey(state.getNextSymbol())) {
+            charts[i + 1].addState(new State(state.rule, i, state.dot + 1));
         }
     }
 
     /**
      * For the completed state in S(i) of the form (X → γ •, j), find states in S(j) of the form (Y → α • X β, k) and add (Y → α X • β, k) to S(i).
+     *
      * @param state
      * @param i
      */
@@ -115,9 +130,7 @@ public class EarleyPermutationParser implements IEarley {
                 .stream()
                 .filter(st -> !st.isFinished() && lhs.equals(st.getNextSymbol()))
                 .forEach(st -> {
-                    List<State> parentStates = new ArrayList<State>(st.parentStates);
-                    parentStates.add(state);
-                    currentChart.addState(new State(st.rule, st.i, i, st.dot + 1, parentStates));
+                    currentChart.addState(new State(st.rule, st.i, st.dot + 1));
                 });
     }
 }

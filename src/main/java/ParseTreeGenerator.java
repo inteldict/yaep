@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 public class ParseTreeGenerator {
     private Chart[] charts;
-    private HashMap<Node, List<State>> completed = new HashMap<>();
+    private HashMap<Node, List<ExtendedState>> completed = new HashMap<>();
 
     private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -28,10 +28,12 @@ public class ParseTreeGenerator {
         return result;
     }
 
+
+
     public List<Node> parseTrees() {
         Node temp;
         Chart chart;
-        List<State> states;
+        List<ExtendedState> states;
 
         // This code can be replaced by lambda in Java 9 using Enumeration streams
         for (int i = 0; i < charts.length; i++) {
@@ -40,10 +42,10 @@ public class ParseTreeGenerator {
                 if (state.isFinished()) {
                     temp = new Node(state.rule.lhs, state.i, i);
                     if (completed.containsKey(temp)) {
-                        completed.get(temp).add(state);
+                        completed.get(temp).add(new ExtendedState(state, i));
                     } else {
                         states = new ArrayList<>();
-                        states.add(state);
+                        states.add(new ExtendedState(state, i));
                         completed.put(temp, states);
                     }
                 }
@@ -62,7 +64,7 @@ public class ParseTreeGenerator {
                 .flatMap(s -> buildTrees(s).stream()).collect(Collectors.toList());
     }
 
-    public List<Node> buildTrees(State state) {
+    public List<Node> buildTrees(ExtendedState state) {
         final List<Node> result = new ArrayList<>();
         final List<Node> newResult = new ArrayList<>();
         final Node root = new Node(state.rule.lhs, state.i, state.j);
@@ -89,7 +91,7 @@ public class ParseTreeGenerator {
                     }
 
                     // get possible alternatives from the chart
-                    List<State> states = completed.get(temp);
+                    List<ExtendedState> states = completed.get(temp);
                     if (states != null) {
                         states.stream()
                                 .filter(s -> (s != state) && (temp.getFrom() == null || s.i == temp.getFrom()) && (temp.getTo() == null || s.j == temp.getTo()))
