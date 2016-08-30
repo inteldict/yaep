@@ -1,0 +1,251 @@
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Jan))
+		([1:5] VP
+			([1:3] VP
+				([1:2] Verb called)
+				([2:3] NP
+					([2:3] Noun Mary)))
+			([3:5] PP
+				([3:4] Prep from)
+				([4:5] NP
+					([4:5] Noun Frankfurt))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Jan))
+		([1:5] VP
+			([1:3] VP
+				([1:2] Verb called)
+				([2:3] NP
+					([2:3] Noun Frankfurt)))
+			([3:5] PP
+				([3:4] Prep from)
+				([4:5] NP
+					([4:5] Noun Mary))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Jan))
+		([1:5] VP
+			([1:2] Verb called)
+			([2:5] NP
+				([2:3] NP
+					([2:3] Noun Frankfurt))
+				([3:5] PP
+					([3:4] Prep from)
+					([4:5] NP
+						([4:5] Noun Mary)))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Jan))
+		([1:5] VP
+			([1:2] Verb called)
+			([2:5] NP
+				([2:3] NP
+					([2:3] Noun Mary))
+				([3:5] PP
+					([3:4] Prep from)
+					([4:5] NP
+						([4:5] Noun Frankfurt)))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Mary))
+		([1:5] VP
+			([1:3] VP
+				([1:2] Verb called)
+				([2:3] NP
+					([2:3] Noun Jan)))
+			([3:5] PP
+				([3:4] Prep from)
+				([4:5] NP
+					([4:5] Noun Frankfurt))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Mary))
+		([1:5] VP
+			([1:3] VP
+				([1:2] Verb called)
+				([2:3] NP
+					([2:3] Noun Frankfurt)))
+			([3:5] PP
+				([3:4] Prep from)
+				([4:5] NP
+					([4:5] Noun Jan))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Mary))
+		([1:5] VP
+			([1:2] Verb called)
+			([2:5] NP
+				([2:3] NP
+					([2:3] Noun Frankfurt))
+				([3:5] PP
+					([3:4] Prep from)
+					([4:5] NP
+						([4:5] Noun Jan)))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Mary))
+		([1:5] VP
+			([1:2] Verb called)
+			([2:5] NP
+				([2:3] NP
+					([2:3] Noun Jan))
+				([3:5] PP
+					([3:4] Prep from)
+					([4:5] NP
+						([4:5] Noun Frankfurt)))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Frankfurt))
+		([1:5] VP
+			([1:3] VP
+				([1:2] Verb called)
+				([2:3] NP
+					([2:3] Noun Jan)))
+			([3:5] PP
+				([3:4] Prep from)
+				([4:5] NP
+					([4:5] Noun Mary))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Frankfurt))
+		([1:5] VP
+			([1:3] VP
+				([1:2] Verb called)
+				([2:3] NP
+					([2:3] Noun Mary)))
+			([3:5] PP
+				([3:4] Prep from)
+				([4:5] NP
+					([4:5] Noun Jan))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Frankfurt))
+		([1:5] VP
+			([1:2] Verb called)
+			([2:5] NP
+				([2:3] NP
+					([2:3] Noun Mary))
+				([3:5] PP
+					([3:4] Prep from)
+					([4:5] NP
+						([4:5] Noun Jan)))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:1] NP
+			([0:1] Noun Frankfurt))
+		([1:5] VP
+			([1:2] Verb called)
+			([2:5] NP
+				([2:3] NP
+					([2:3] Noun Jan))
+				([3:5] PP
+					([3:4] Prep from)
+					([4:5] NP
+						([4:5] Noun Mary)))))))
+
+([0:5] TOP
+	([0:5] S
+		([0:3] NP
+			([0:1] NP
+				([0:1] Noun Mary))
+			([1:3] PP
+				([1:2] Prep from)
+				([2:3] NP
+					([2:3] Noun Jan))))
+		([3:5] VP
+			([3:4] Verb called)
+			([4:5] NP
+				([4:5] Noun Frankfurt)))))
+
+([0:5] TOP
+	([0:5] S
+		([0:3] NP
+			([0:1] NP
+				([0:1] Noun Frankfurt))
+			([1:3] PP
+				([1:2] Prep from)
+				([2:3] NP
+					([2:3] Noun Jan))))
+		([3:5] VP
+			([3:4] Verb called)
+			([4:5] NP
+				([4:5] Noun Mary)))))
+
+([0:5] TOP
+	([0:5] S
+		([0:3] NP
+			([0:1] NP
+				([0:1] Noun Jan))
+			([1:3] PP
+				([1:2] Prep from)
+				([2:3] NP
+					([2:3] Noun Mary))))
+		([3:5] VP
+			([3:4] Verb called)
+			([4:5] NP
+				([4:5] Noun Frankfurt)))))
+
+([0:5] TOP
+	([0:5] S
+		([0:3] NP
+			([0:1] NP
+				([0:1] Noun Frankfurt))
+			([1:3] PP
+				([1:2] Prep from)
+				([2:3] NP
+					([2:3] Noun Mary))))
+		([3:5] VP
+			([3:4] Verb called)
+			([4:5] NP
+				([4:5] Noun Jan)))))
+
+([0:5] TOP
+	([0:5] S
+		([0:3] NP
+			([0:1] NP
+				([0:1] Noun Jan))
+			([1:3] PP
+				([1:2] Prep from)
+				([2:3] NP
+					([2:3] Noun Frankfurt))))
+		([3:5] VP
+			([3:4] Verb called)
+			([4:5] NP
+				([4:5] Noun Mary)))))
+
+([0:5] TOP
+	([0:5] S
+		([0:3] NP
+			([0:1] NP
+				([0:1] Noun Mary))
+			([1:3] PP
+				([1:2] Prep from)
+				([2:3] NP
+					([2:3] Noun Frankfurt))))
+		([3:5] VP
+			([3:4] Verb called)
+			([4:5] NP
+				([4:5] Noun Jan)))))

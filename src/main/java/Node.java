@@ -1,6 +1,7 @@
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import static java.util.Map.Entry;
 /**
  * @author Denis Krusko
@@ -12,7 +13,7 @@ public class Node implements INode {
     private Integer from;
     private Integer to;
     private List<INode> children = new ArrayList<>();
-    public HashMap<String, Integer> wordsMap = new HashMap<>();
+    private HashMap<CharSequence, Integer> wordsMap = new HashMap<>();
 
     public Node(Node node) {
         this.symbol = node.getSymbol();
@@ -24,7 +25,7 @@ public class Node implements INode {
 
     public Node(Node node, INode child) {
         this(node);
-        children.add(child);
+        addNode(child);
     }
 
     public Node(CharSequence symbol) {
@@ -40,6 +41,11 @@ public class Node implements INode {
     public Node(CharSequence symbol, Integer from) {
         this.symbol = symbol;
         this.from = from;
+    }
+
+    public Node(CharSequence lhs, int i, int j, Map<CharSequence, Integer> inputMap) {
+        this(lhs, i, j);
+        wordsMap.putAll(inputMap);
     }
 
     @Override
@@ -78,7 +84,22 @@ public class Node implements INode {
     }
 
     public boolean addNode(INode node) {
+        if (node instanceof Node) {
+            ((Node) node).getWordsMap().forEach((k, v) -> wordsMap.merge(k, v, (a,b) -> a + b));
+        } else {
+            wordsMap.put(node.getSymbol(), 1);
+        }
         return children.add(node);
+    }
+
+    public boolean validateByInput(Map<CharSequence, Integer> inputMap) {
+        return !wordsMap
+                .entrySet()
+                .stream()
+                .filter(m -> inputMap.get(m.getKey()) < m.getValue())
+                .findAny()
+                .isPresent();
+
     }
 
     public List<INode> getChildren() {
@@ -128,5 +149,9 @@ public class Node implements INode {
         return childMaps.stream()
                 .flatMap(m ->  m.entrySet().stream())
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a,b) -> a + b));
+    }
+
+    public HashMap<CharSequence, Integer> getWordsMap() {
+        return wordsMap;
     }
 }

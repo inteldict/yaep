@@ -16,7 +16,7 @@ public class EarleyPermutationParser implements IEarley {
     private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Grammar grammar;
     private Chart[] charts;
-    public final HashMap<String, Integer> wordsMap = new HashMap<>();
+    private HashMap<CharSequence, Integer> wordsMap = new HashMap<>();
 
     public EarleyPermutationParser(Grammar grammar) {
         this.grammar = grammar;
@@ -134,5 +134,9 @@ public class EarleyPermutationParser implements IEarley {
                 .forEach(st -> {
                     currentChart.addState(new State(st.rule, st.i, st.dot + 1));
                 });
+    }
+
+    public HashMap<CharSequence, Integer> getWordsMap() {
+        return wordsMap;
     }
 }

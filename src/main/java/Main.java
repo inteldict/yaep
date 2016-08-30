@@ -33,14 +33,14 @@ public class Main {
             }
             return chartOutput.toString();
         });
-        ParseTreeGenerator parseTreeGenerator = new ParseTreeGenerator(charts, parser.wordsMap);
+        ParseTreeGenerator parseTreeGenerator = new ParseTreeGenerator(charts, parser.getWordsMap());
         List<Node> trees = parseTreeGenerator.parseTreesOnTime();
         log.info(() -> {
             StringBuilder treeOutput = new StringBuilder();
-            treeOutput.append("Number of trees: ").append(trees.size());
             for (Node tree : trees) {
                 treeOutput.append(tree.prettyPrint(0)).append('\n');
             }
+            treeOutput.append("Number of trees: ").append(trees.size());
             return treeOutput.toString();
         });
     }

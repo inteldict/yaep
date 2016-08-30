@@ -6,7 +6,6 @@ import java.util.HashSet;
  */
 public class ExtendedState extends State {
     protected final int j;
-    protected final HashSet<Integer> coveredInput = new HashSet<>();
 
     public ExtendedState(State state, int j) {
         super(state.rule, state.i, state.dot);
