@@ -11,7 +11,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        String[] sentence1 = {"Mary", "called", "Mary"};
         String[] sentence1 = {"Mary", "called", "Jan"};
         String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");

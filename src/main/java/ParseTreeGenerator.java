@@ -3,7 +3,6 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Denis Krusko
@@ -103,12 +102,11 @@ public class ParseTreeGenerator {
                                     this.buildTrees(s, new HashSet<>(parentStates)).stream()
                                 ).forEach(child -> {
 //                                            newResult.add(new Node(previouslyAdded, child));
-                                            Map<CharSequence, Integer> childMap = child.wordsMap();
-                                            Map<CharSequence, Integer> totalMap = Stream.of(previouslyAddedMap, childMap).flatMap(m -> m.entrySet().stream())
-                                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a + b));
+                                            Node testNode = new Node(previouslyAdded, child);
+                                            Map<CharSequence, Integer> testMap = testNode.wordsMap();
 
-                                            if (!totalMap.entrySet().stream().filter(m -> wordsMap.containsKey(m.getKey()) && wordsMap.get(m.getKey()) < m.getValue()).findAny().isPresent()) {
-                                                newResult.add(new Node(previouslyAdded, child));
+                                            if (!testMap.entrySet().stream().filter(m -> wordsMap.containsKey(m.getKey()) && wordsMap.get(m.getKey()) < m.getValue()).findAny().isPresent()) {
+                                                newResult.add(testNode);
                                             }
                                         }
                                 );
