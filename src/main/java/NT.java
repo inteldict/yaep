@@ -8,6 +8,7 @@ import java.util.Objects;
  */
 public class NT implements java.io.Serializable, Comparable<CharSequence>, CharSequence {
     protected final String symbol;
+    private boolean nullable;
 
     public NT(String symbol) {
         this.symbol = symbol;
@@ -49,5 +50,13 @@ public class NT implements java.io.Serializable, Comparable<CharSequence>, CharS
     @Override
     public int compareTo(CharSequence o) {
         return symbol.compareTo(o.toString());
+    }
+
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
     }
 }

@@ -1,0 +1,3 @@
+# ε - epsilon
+S -> A A "x"
+A -> ε

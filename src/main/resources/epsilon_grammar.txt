@@ -1,5 +1,6 @@
+# ε - epsilon
 S -> S S
 S -> A S B
 S -> A B
-A -> "a"
-B -> "b"
+A -> "a" | ε
+B -> "b" | ε

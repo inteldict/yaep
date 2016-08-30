@@ -98,10 +98,18 @@ public class EarleyPermutationParser implements IEarley {
      * @param i     - state index
      */
     public void predictor(State state, int i) {
-        CharSequence lhs = state.getNextSymbol();
+        NT lhs = (NT) state.getNextSymbol();
         List<Rule> rules = grammar.rules.get(lhs);
+        if (rules == null) {
+            log.severe(() -> "There is no " + lhs + " rule in the grammar");
+            System.exit(1);
+        }
         for (Rule rule : rules) {
             charts[i].addState(new State(rule, i, 0));
+        }
+        // Aycock and Horspool solution for epsilon rules
+        if (lhs.isNullable()) {
+            charts[i].addState(new State(state.rule, i, state.dot + 1));
         }
     }
 
@@ -128,12 +136,20 @@ public class EarleyPermutationParser implements IEarley {
     public void completer(State state, int i) {
         NT lhs = state.rule.lhs;
         Chart currentChart = charts[i];
-        charts[state.i].states
-                .stream()
-                .filter(st -> !st.isFinished() && lhs.equals(st.getNextSymbol()))
-                .forEach(st -> {
-                    currentChart.addState(new State(st.rule, st.i, st.dot + 1));
-                });
+        List<State> states = charts[state.i].states;
+        State st;
+        for (int k = 0; k < states.size(); k++) {
+            st = states.get(k);
+            if (!st.isFinished() && lhs.equals(st.getNextSymbol())) {
+                currentChart.addState(new State(st.rule, st.i, st.dot + 1));
+            }
+        }
+//        charts[state.i].states
+//                .stream()
+//                .filter(st -> !st.isFinished() && lhs.equals(st.getNextSymbol()))
+//                .forEach(st -> {
+//                    currentChart.addState(new State(st.rule, st.i, st.dot + 1));
+//                });
     }
 
     public HashMap<CharSequence, Integer> getWordsMap() {

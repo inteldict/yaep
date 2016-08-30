@@ -13,10 +13,16 @@ public class Main {
 
         String[] sentence1 = {"Mary", "called", "Jan"};
         String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
-        SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
+        String[] sentence3 = {"a", "b"};
+        String[] sentence4 = {"x"};
+        String[] sentence5 = {"a"};
+        SimpleGrammar grammar = new SimpleGrammar("epsilon_paper_grammar.txt");
         EarleyPermutationParser parser = new EarleyPermutationParser(grammar);
-        test(sentence1, parser);
-        test(sentence2, parser);
+//        test(sentence1, parser);
+//        test(sentence2, parser);
+//        test(sentence3, parser);
+//        test(sentence4, parser);
+        test(sentence5, parser);
     }
 
     static void test(String[] sent, EarleyPermutationParser parser) {
