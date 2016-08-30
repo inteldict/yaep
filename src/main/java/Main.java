@@ -11,10 +11,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String[] sentence1 = {"Mary", "called", "Jan"};
-        String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
+//        String[] sentence1 = {"Mary", "called", "Jan"};
+        String[] sentence1 = {"a", "b"};
+//        String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
-        IEarley parser = new EarleyPermutationParser(grammar);
+        IEarley parser = new EarleyParser(grammar);
         test(sentence1, parser);
 //        test(sentence2, parser);
     }
