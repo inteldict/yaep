@@ -29,4 +29,12 @@ public class Chart {
         }
         return result.toString();
     }
+
+    public String toString(int j) {
+        StringBuilder result = new StringBuilder();
+        for(State state : states) {
+            result.append(state.toString(j)).append('\n');
+        }
+        return result.toString();
+    }
 }

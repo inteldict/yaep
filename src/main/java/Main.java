@@ -11,16 +11,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        String[] sentence1 = {"Mary", "called", "Jan"};
-        String[] sentence1 = {"a", "b"};
-//        String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
+        String[] sentence1 = {"Mary", "called", "Jan"};
+        String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
-        IEarley parser = new EarleyParser(grammar);
+        EarleyPermutationParser parser = new EarleyPermutationParser(grammar);
         test(sentence1, parser);
-//        test(sentence2, parser);
+        test(sentence2, parser);
     }
 
-    static void test(String[] sent, IEarley parser) {
+    static void test(String[] sent, EarleyPermutationParser parser) {
         StringBuffer out = new StringBuffer();
         for (int i = 0; i < sent.length - 1; i++)
             out.append(sent[i] + " ");
@@ -30,17 +29,18 @@ public class Main {
         log.info(() -> {
             StringBuilder chartOutput = new StringBuilder("Charts produced by the sentence: " + sentence);
             for (int i = 0; i < charts.length; i++) {
-                chartOutput.append("\nChart " + i + ":\n" + charts[i]);
+                chartOutput.append("\nChart " + i + ":\n" + charts[i].toString(i));
             }
             return chartOutput.toString();
         });
-        ParseTreeGenerator parseTreeGenerator = new ParseTreeGenerator(charts);
+        ParseTreeGenerator parseTreeGenerator = new ParseTreeGenerator(charts, parser.getWordsMap());
         List<Node> trees = parseTreeGenerator.parseTreesOnTime();
         log.info(() -> {
             StringBuilder treeOutput = new StringBuilder();
             for (Node tree : trees) {
                 treeOutput.append(tree.prettyPrint(0)).append('\n');
             }
+            treeOutput.append("Number of trees: ").append(trees.size());
             return treeOutput.toString();
         });
     }
