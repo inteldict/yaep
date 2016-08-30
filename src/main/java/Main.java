@@ -16,7 +16,7 @@ public class Main {
         String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
         SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
         EarleyPermutationParser parser = new EarleyPermutationParser(grammar);
-        test(sentence1, parser);
+//        test(sentence1, parser);
         test(sentence2, parser);
     }
 
@@ -30,7 +30,7 @@ public class Main {
         log.info(() -> {
             StringBuilder chartOutput = new StringBuilder("Charts produced by the sentence: " + sentence);
             for (int i = 0; i < charts.length; i++) {
-                chartOutput.append("\nChart " + i + ":\n" + charts[i]);
+                chartOutput.append("\nChart " + i + ":\n" + charts[i].toString(i));
             }
             return chartOutput.toString();
         });

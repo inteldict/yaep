@@ -70,7 +70,7 @@ public class ParseTreeGenerator {
         final Node root = new Node(state.rule.lhs, state.i, state.j);
         result.add(root);
         parentStates.add(state);
-
+//        System.out.println("Root:" + root);
         int j;
         Integer index;
         for (int i = 0; i < state.rule.rhs.length; i++) {
@@ -90,6 +90,7 @@ public class ParseTreeGenerator {
                     Node previouslyAdded = result.get(j);
                     Map<CharSequence, Integer> previouslyAddedMap = previouslyAdded.wordsMap();
                     if (temp.getFrom() == null) {
+//                        System.out.println(previouslyAdded.getLastChildTo());
                         temp.setFrom(previouslyAdded.getLastChildTo());
                     }
 
@@ -100,8 +101,8 @@ public class ParseTreeGenerator {
                                 .filter(s -> !parentStates.contains(s) && (temp.getFrom() == null || s.i == temp.getFrom()) && (temp.getTo() == null || s.j == temp.getTo()))
                                 .flatMap(s ->
                                     this.buildTrees(s, new HashSet<>(parentStates)).stream()
-                                )
-                                .forEach(child -> {
+                                ).forEach(child -> {
+//                                            newResult.add(new Node(previouslyAdded, child));
                                             Map<CharSequence, Integer> childMap = child.wordsMap();
                                             Map<CharSequence, Integer> totalMap = Stream.of(previouslyAddedMap, childMap).flatMap(m -> m.entrySet().stream())
                                                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a + b));
@@ -117,13 +118,14 @@ public class ParseTreeGenerator {
                     }
                 } else {
                     newResult.add(new Node(root, new LeafNode(cs, state.i, state.j)));
+//                    root.addNode(new LeafNode(cs, state.i, state.j));
                 }
             }
+            result.clear();
             if (!newResult.isEmpty()) {
-                result.clear();
                 result.addAll(newResult);
             } else {
-                System.out.println("No results!");
+                return result;
             }
         }
         return result;
