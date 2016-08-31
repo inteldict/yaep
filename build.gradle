@@ -19,14 +19,15 @@ dependencies {
 
 def mainClassName="Main"
 jar {
+    from (configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}) {
+             include('**/*.class')
+             exclude("**/META-INF*")
+             exclude("**/*.txt")
+         }
+
     manifest {
         attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
                 'Main-Class': mainClassName
         )
-    }
-
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
