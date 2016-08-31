@@ -8,11 +8,13 @@ public interface IEarley {
 
     void predictor(State state, int i);
 
-    void scanner(State state, int i, String word);
+    void scanner(State state, int i);
 
     void completer(State state, int i);
 
     Chart[] parse(String[] words);
 
     Chart[] parseOnTime(String[] words);
+
+    IParseTreeGenerator buildTreeGenerator();
 }

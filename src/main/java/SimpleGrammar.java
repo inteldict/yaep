@@ -46,12 +46,12 @@ public class SimpleGrammar extends Grammar {
         }
     }
 
-    public void readFromFile(String fileName) {
+    public void readFromFile(String path) {
 
 
-        URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
+//        URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
         try (
-                Stream<String> stream = Files.lines(Paths.get(url.toURI()))) {
+                Stream<String> stream = Files.lines(Paths.get(path))) {
             stream.parallel().filter(p -> !p.isEmpty() && !p.startsWith("#")).forEach(line -> {
                 Matcher ntMatcher = SPLIT_WITHOUT_QUOTES_PATTERN.matcher(line);
                 ArrayList<String> list = new ArrayList<>();
@@ -102,7 +102,7 @@ public class SimpleGrammar extends Grammar {
                     log.severe(() -> "Couldn't find '" + LHS_RHS_DELIM + "' in: " + line);
                 }
             });
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             log.log(Level.SEVERE, e.getMessage(), e);
         }
     }

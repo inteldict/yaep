@@ -1,23 +1,19 @@
-/**
- * @author Denis Krusko
- * @author e-mail: kruskod@gmail.com
- */
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.Map;
 
 /**
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
  */
-public class ParseTreeGenerator extends AbstractParseTreeGenerator {
+public class PermutationParseTreeGenerator extends AbstractParseTreeGenerator {
 
-    public ParseTreeGenerator(EarleyParser earleyParser) {
-        this.charts = earleyParser.charts;
+    private Map<CharSequence, Integer> wordsMap;
+
+    public PermutationParseTreeGenerator(PermutationEarleyParser parser) {
+        this.charts = parser.charts;
+        wordsMap = parser.getWordsMap();
     }
 
     public List<Node> buildTrees(ExtendedState state, HashSet<ExtendedState> parentStates) {
@@ -82,10 +78,13 @@ public class ParseTreeGenerator extends AbstractParseTreeGenerator {
                                         this.buildTrees(s, new HashSet<>(parentStates)).stream()
                                 ).forEach(child -> {
                             for (Node tempRoot : result) {
-                                newResult.add(new Node(tempRoot, child));
+                                Node testNode = new Node(tempRoot, child);
+                                if (testNode.validateByInput(wordsMap)) {
+                                    newResult.add(testNode);
+                                }
                             }
                         });
-                    } /** else this hypothesis is false, remove corresponding alternative
+                    }  /** else this hypothesis is false, remove corresponding alternative
                      * the block absents, because we clearing result after each iteration
                      **/
                 } else { // in this case last child of different results has different index
@@ -97,7 +96,13 @@ public class ParseTreeGenerator extends AbstractParseTreeGenerator {
                                     .filter(s -> !parentStates.contains(s) && (temp.getFrom() == null || s.i == temp.getFrom()) && (temp.getTo() == null || s.j == temp.getTo()))
                                     .flatMap(s ->
                                             this.buildTrees(s, new HashSet<>(parentStates)).stream()
-                                    ).forEach(child -> newResult.add(new Node(tempRoot, child)));
+                                    ).forEach(child -> {
+                                        Node testNode = new Node(tempRoot, child);
+                                        if (testNode.validateByInput(wordsMap)) {
+                                            newResult.add(testNode);
+                                        }
+                                    }
+                            );
                         } /** else this hypothesis is false, remove corresponding alternative
                          * the block absents, because we clearing result after each iteration
                          **/
@@ -119,4 +124,3 @@ public class ParseTreeGenerator extends AbstractParseTreeGenerator {
         return result;
     }
 }
-

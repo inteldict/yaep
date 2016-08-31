@@ -1,7 +1,5 @@
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -9,36 +7,17 @@ import java.util.logging.Logger;
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
  */
-public class EarleyPermutationParser implements IEarley {
+public abstract class AbstractEarley implements IEarley {
 
     public static final Rule INIT_RULE = new Rule(new NT("TOP"), new NT[]{new NT("S")});
     public static final State INIT_STATE = new State(INIT_RULE, 0, 0);
-    private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private Grammar grammar;
-    private Chart[] charts;
-    private HashMap<CharSequence, Integer> wordsMap = new HashMap<>();
 
-    public EarleyPermutationParser(Grammar grammar) {
+    protected static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    protected Grammar grammar;
+    protected Chart[] charts;
+
+    public AbstractEarley(Grammar grammar) {
         this.grammar = grammar;
-    }
-
-    private void init(String[] words) {
-        if (!wordsMap.isEmpty()) {
-            wordsMap.clear();
-        }
-
-        Integer index;
-        charts = new Chart[words.length + 1];
-        for (int i = 0; i < words.length; i++) {
-            charts[i] = new Chart();
-            if ((index = wordsMap.get(words[i])) == null) {
-                index = 1;
-            } else {
-                index++;
-            }
-            wordsMap.put(words[i], index);
-        }
-        charts[words.length] = new Chart();
     }
 
     /**
@@ -75,7 +54,7 @@ public class EarleyPermutationParser implements IEarley {
                 if (st.isFinished()) {
                     completer(st, i);
                 } else if (st.isNextSymbolTerminal()) {
-                    scanner(st, i, words[i]);
+                    scanner(st, i);
                 } else {
                     predictor(st, i);
                 }
@@ -114,20 +93,6 @@ public class EarleyPermutationParser implements IEarley {
     }
 
     /**
-     * Compares the next symbol in the input stream with the next symbol of the form (X → α • a β, i), if it matchses add (X → α a • β, i) to S(i+1).
-     *
-     * @param state
-     * @param i
-     * @param word
-     */
-    public void scanner(State state, int i, String word) {
-        // 1st: check if symbol in input
-        if (wordsMap.containsKey(state.getNextSymbol())) {
-            charts[i + 1].addState(new State(state.rule, i, state.dot + 1));
-        }
-    }
-
-    /**
      * For the completed state in S(i) of the form (X → γ •, j), find states in S(j) of the form (Y → α • X β, k) and add (Y → α X • β, k) to S(i).
      *
      * @param state
@@ -144,15 +109,8 @@ public class EarleyPermutationParser implements IEarley {
                 currentChart.addState(new State(st.rule, st.i, st.dot + 1));
             }
         }
-//        charts[state.i].states
-//                .stream()
-//                .filter(st -> !st.isFinished() && lhs.equals(st.getNextSymbol()))
-//                .forEach(st -> {
-//                    currentChart.addState(new State(st.rule, st.i, st.dot + 1));
-//                });
     }
 
-    public HashMap<CharSequence, Integer> getWordsMap() {
-        return wordsMap;
-    }
+    protected abstract void init(String[] words);
+
 }
