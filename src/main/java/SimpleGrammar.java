@@ -24,7 +24,8 @@ public class SimpleGrammar extends Grammar {
 
     private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    private HashSet<NT> nonterminals = new HashSet<>();
+    protected HashSet<NT> nonterminals = new HashSet<>();
+    protected HashSet<CharSequence> terminals = new HashSet<>();
 
     public SimpleGrammar(String fileName) {
         super();
@@ -85,7 +86,9 @@ public class SimpleGrammar extends Grammar {
                         return new Rule(lhs, sublist.stream().map(item -> {
                             if (item.startsWith("\"") || item.startsWith("'")) {    // symbol is a terminal
                                 Matcher quoteMatcher = QUOTE_PATTERN.matcher(item);
-                                return quoteMatcher.replaceAll("");
+                                CharSequence terminal = quoteMatcher.replaceAll("");
+                                terminals.add(terminal);
+                                return terminal;
                             } else {    // right part is a non-terminal
                                 return createOrGetNT(item);
                             }
