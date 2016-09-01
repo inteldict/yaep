@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -64,7 +63,6 @@ public class EarleyParserTest {
         State lastState = states.get(states.size() - 1);
         assertThat(lastState, equalTo(AbstractEarley.FINAL_STATE));
     }
-
 
     @Test
     public void simpleRecognizeTest() {

@@ -76,7 +76,7 @@ public class EarleyParserEpsilonTest {
         });
     }
 
-    @Ignore("Parser need special technology to deal with left recursion")
+    @Ignore("Parser need special technology to deal with left recursion\n")
     @Test
     public void epsilonABGrammarTest() {
         EarleyParser parser = initParser("epsilon_ab_grammar.txt");
