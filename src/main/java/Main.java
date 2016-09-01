@@ -63,7 +63,7 @@ public class Main {
                 forEach(sentence -> {
                     Chart[] charts = earleyParser.recognize(sentence);
                     if (charts != null) {
-                        log.info(() -> "Charts produced by the sentence: " + sentence + "\n" + Chart.prettyPrint(charts));
+                        log.info(() -> Chart.prettyPrint(sentence ,charts));
                         buildTrees(earleyParser.buildTreeGenerator());
                     }
                 });

@@ -9,8 +9,8 @@ public class Chart {
 
     protected final ArrayList<State> states = new ArrayList<>();
 
-    public static String prettyPrint(final Chart[] charts) {
-        StringBuilder chartOutput = new StringBuilder();
+    public static String prettyPrint(String input, Chart[] charts) {
+        StringBuilder chartOutput = new StringBuilder("Charts produced by the sentence: " + input + "\n");
         for (int i = 0; i < charts.length; i++) {
             chartOutput.append("Chart " + i + ":\n" + charts[i].toString(String.valueOf(i)) + "\n");
         }
