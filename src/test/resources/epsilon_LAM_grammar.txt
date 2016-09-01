@@ -1,0 +1,7 @@
+# S -> "a" grammar
+# ε - epsilon
+S -> L "a" M
+L -> L M
+L -> ε
+M -> M M
+M -> ε

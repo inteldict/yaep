@@ -1,0 +1,5 @@
+# ε - epsilon
+S -> A A A A
+A -> E
+A -> "a"
+E -> ε

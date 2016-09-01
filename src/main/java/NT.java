@@ -19,7 +19,7 @@ public class NT implements java.io.Serializable, Comparable<CharSequence>, CharS
         if (this == o) return true;
         if (!(o instanceof NT)) return false;
         NT nt = (NT) o;
-        return Objects.equals(symbol, nt.symbol);
+        return symbol.equals(nt.symbol);
     }
 
     @Override

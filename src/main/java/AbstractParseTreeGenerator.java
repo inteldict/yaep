@@ -49,7 +49,7 @@ public abstract class AbstractParseTreeGenerator implements IParseTreeGenerator 
         List<State> chartStates = charts[charts.length - 1].states;
         State lastState = chartStates.get(chartStates.size() -1);
 
-        if (lastState.isFinished() && lastState.equals(new State(AbstractEarley.INIT_RULE, 0, 1))) {
+        if (AbstractEarley.FINAL_STATE.equals(lastState)) {
             log.info(() -> "Recognition succeed");
             return buildTrees(new ExtendedState(lastState, charts.length - 1), new HashSet<>());
         } else {

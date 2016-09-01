@@ -1,8 +1,13 @@
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 /**
  * @author Denis Krusko
@@ -10,37 +15,52 @@ import java.util.stream.Stream;
  */
 public class SimpleGrammarTest {
 
+    private SimpleGrammar grammar;
+
+    @Before
+    public void setUp() {
+        grammar = new SimpleGrammar();
+    }
+
+    @After
+    public void tearDown()  {
+        grammar = null;
+    }
+
     @Test
     public void loadFileTest () {
-        SimpleGrammar grammar = new SimpleGrammar("grammar/grammar.txt");
+        grammar.readResource("grammar.txt");
+        grammar.setNullable();
         // test grammar attributes
-        Assert.assertEquals(grammar.rules.size(), grammar.nonterminals.size());
-        Assert.assertEquals(7, grammar.nonterminals.size());
-
+        assertEquals(7, grammar.rules.size());
         // test terminals
-        String[] expectedTerminals = {"Frankfurt", "Jan",  "Mary", "called", "from"};
+        CharSequence[] expectedTerminals = {"Frankfurt", "Jan", "Mary", "called", "from"};
         Arrays.sort(expectedTerminals);
-        String[] actualTerminals = grammar.terminals.toArray(new String[0]);
+        CharSequence[] actualTerminals = grammar.terminals.toArray(new CharSequence[0]);
         Arrays.sort(actualTerminals);
-        Assert.assertArrayEquals("Terminal test:", expectedTerminals , actualTerminals);
+        assertArrayEquals("Terminal test:", expectedTerminals , actualTerminals);
     }
 
     @Test
     public void epsilonGrammarTest() {
-        SimpleGrammar grammar = new SimpleGrammar("grammar/epsilon_paper_grammar.txt");
+        grammar.readResource("epsilon_paper_grammar.txt");
+        grammar.setNullable();
+
         // test nonterminals
-        NT[] actualNonTerminals = grammar.nonterminals.toArray(new NT[0]);
+        NT[] actualNonTerminals = grammar.rules.keySet().toArray(new NT[0]);
         Arrays.sort(actualNonTerminals);
-        NT[] expectedNonTerminals = {new NT("A"), new NT("E"), new NT("S"), new NT("ε")};
+
+        NT[] expectedNonTerminals = {new NT("A"), new NT("E"), new NT("S"), SimpleGrammar.EPSILON};
         Arrays.sort(expectedNonTerminals);
-        Assert.assertArrayEquals("Nonterminal test:", expectedNonTerminals , actualNonTerminals);
+        assertArrayEquals("Nonterminal test:", expectedNonTerminals , actualNonTerminals);
 
         // test isNullable
-        Assert.assertEquals(expectedNonTerminals.length - 1, Stream.of(actualNonTerminals).filter(NT::isNullable).count());
+
+        assertEquals(expectedNonTerminals.length - 1, Stream.of(actualNonTerminals).filter(NT::isNullable).count());
 
         // test terminals
         String[] expectedTerminals = {"a"};
-        Assert.assertArrayEquals("Terminal test:", expectedTerminals , grammar.terminals.toArray(new String[0]));
+        assertArrayEquals("Terminal test:", expectedTerminals , grammar.terminals.toArray(new String[0]));
     }
 
 }

@@ -1,0 +1,4 @@
+# left recursion a^nb grammar
+# ε - epsilon
+S -> A "a" "b"
+A -> "a" A "a" | ε

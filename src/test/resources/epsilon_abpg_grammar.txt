@@ -1,0 +1,5 @@
+# (ab)*(p|q)* grammar
+# ε - epsilon
+S -> "a" A | "p" B | "q" B
+A -> "b" S
+B -> "p" B | "q" B | ε

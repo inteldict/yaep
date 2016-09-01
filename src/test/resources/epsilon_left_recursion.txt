@@ -1,0 +1,6 @@
+# left recursion grammar
+# ε - epsilon
+S -> A B "c"
+B -> C "d" | A B "f"
+C -> S "e"
+A -> ε

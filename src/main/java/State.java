@@ -46,10 +46,10 @@ public class State {
 
     @Override
     public String toString() {
-        return String.format("[%d:..] %s %s %s", i, rule.lhs.symbol, SimpleGrammar.LHS_RHS_DELIM, rule.toStringWithDot(dot));
+        return toString("..");
     }
 
-    public String toString(int j) {
-        return String.format("[%d:%d] %s %s %s", i,j, rule.lhs.symbol, SimpleGrammar.LHS_RHS_DELIM, rule.toStringWithDot(dot));
+    public String toString(String j) {
+        return String.format("[%d:%s] %s %s %s", i, j, rule.lhs.symbol, SimpleGrammar.LHS_RHS_DELIM, rule.toStringWithDot(dot));
     }
 }

@@ -12,9 +12,21 @@ public interface IEarley {
 
     void completer(State state, int i);
 
+    /**
+     * lowlewel function, that does actual parisng
+     * @param words tokenized input
+     * @return
+     */
     Chart[] parse(String[] words);
 
     Chart[] parseOnTime(String[] words);
 
     IParseTreeGenerator buildTreeGenerator();
+
+    /**
+     * Tokenize input and parse
+     * @param input sentence to be parsed
+     * @return charts
+     */
+    Chart[] recognize(String input);
 }

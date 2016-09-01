@@ -1,7 +1,11 @@
+import util.YStringUtils;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Denis Krusko
@@ -11,10 +15,13 @@ public abstract class AbstractEarley implements IEarley {
 
     public static final Rule INIT_RULE = new Rule(new NT("TOP"), new NT[]{new NT("S")});
     public static final State INIT_STATE = new State(INIT_RULE, 0, 0);
+    public static final State FINAL_STATE = new State(AbstractEarley.INIT_RULE, 0, 1);
 
     protected static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     protected Grammar grammar;
     protected Chart[] charts;
+
+
 
     public AbstractEarley(Grammar grammar) {
         this.grammar = grammar;
@@ -110,6 +117,31 @@ public abstract class AbstractEarley implements IEarley {
             }
         }
     }
+
+    public Chart[] recognize(String input) {
+        if (input == null | input.isEmpty()) {
+            throw new IllegalArgumentException("Parameter 'input' shouldn't be null or empty");
+        }
+        String[] tokens = YStringUtils.split(input);
+        Chart[] charts = parseOnTime(tokens);
+        return charts;
+    }
+
+/*
+        def check_coverage(self, tokens):
+        """
+        Check whether the grammar rules cover the given list of tokens.
+        If not, then raise an exception.
+
+        :type tokens: list(str)
+        """
+        missing = [tok for tok in tokens
+                   if not self._lexical_index.get(tok)]
+        if missing:
+            missing = ', '.join('%r' % (w,) for w in missing)
+            raise ValueError("Grammar does not cover some of the "
+                             "input words: %r." % missing)
+ */
 
     protected abstract void init(String[] words);
 

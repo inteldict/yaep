@@ -17,24 +17,6 @@ public class Main {
 
     private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-//    public static void main(String[] args) {
-//
-//        String[] sentence1 = {"Mary", "called", "Jan"};
-//        String[] sentence2 = {"Mary", "called", "Jan", "from", "Frankfurt"};
-//        String[] sentence3 = {"a", "b"};
-//        String[] sentence4 = {"x"};
-//        String[] sentence5 = {"a"};
-////        SimpleGrammar grammar = new SimpleGrammar("epsilon_paper_grammar.txt");
-//        SimpleGrammar grammar = new SimpleGrammar("grammar.txt");
-//        EarleyPermutationParser parser = new EarleyPermutationParser(grammar);
-//        parseTrees(sentence1, parser);
-//        parseTrees(sentence2, parser);
-////        parseTrees(sentence3, parser);
-////        parseTrees(sentence4, parser);
-////        parseTrees(sentence5, parser);
-//    }
-
-
     public static void main(String[] args) throws Exception {
 
         Options options = new Options();
@@ -52,7 +34,6 @@ public class Main {
             cmd = commandLineParser.parse(options, args);
         } catch (ParseException e) {
             System.err.println(e.getMessage());
-//            System.getProperty("sun.java.command")
             formatter.printHelp("YAEP  [options] -g file input [[input2 [input3] ...]]", options);
             System.exit(1);
             return;
@@ -80,27 +61,12 @@ public class Main {
 
         inputStream.
                 forEach(sentence -> {
-                    Chart[] charts = recognize(sentence, earleyParser);
+                    Chart[] charts = earleyParser.recognize(sentence);
                     if (charts != null) {
+                        log.info(() -> "Charts produced by the sentence: " + sentence + "\n" + Chart.prettyPrint(charts));
                         buildTrees(earleyParser.buildTreeGenerator());
                     }
                 });
-    }
-
-    public static Chart[] recognize(String input, IEarley parser) {
-        if (input == null | input.isEmpty()) {
-            return null;
-        }
-        String[] tokens = input.split("\\s+");
-        Chart[] charts = parser.parseOnTime(tokens);
-        log.info(() -> {
-            StringBuilder chartOutput = new StringBuilder("Charts produced by the sentence: " + input);
-            for (int i = 0; i < charts.length; i++) {
-                chartOutput.append("\nChart " + i + ":\n" + charts[i].toString(i));
-            }
-            return chartOutput.toString();
-        });
-        return charts;
     }
 
     public static List<Node> buildTrees(IParseTreeGenerator parseTreeGenerator) {

@@ -1,0 +1,4 @@
+# ε - epsilon
+S -> L S D | ε
+L -> ε
+D -> "d"

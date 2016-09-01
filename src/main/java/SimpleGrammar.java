@@ -1,35 +1,41 @@
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Map.Entry;
 
 /**
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
  */
 public class SimpleGrammar extends Grammar {
+
     public final static NT EPSILON = new NT("ε");
     public final static String LHS_RHS_DELIM = "->";
+
     private final static String RIGHT_PART_DELIM = "|";
     private final static Pattern SPLIT_WITHOUT_QUOTES_PATTERN = Pattern.compile("([^\"']\\S*|[\"'].+?[\"'])\\s*");
     private final static Pattern QUOTE_PATTERN = Pattern.compile("[\"']");
 
-    private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    public SimpleGrammar() {
+    }
 
-    protected HashSet<NT> nonterminals = new HashSet<>();
-    protected HashSet<CharSequence> terminals = new HashSet<>();
+    public SimpleGrammar(BufferedReader reader) {
+        readFromBuffer(reader);
+        setNullable();
+    }
 
-    public SimpleGrammar(String fileName) {
-        super();
-        readFromFile(fileName);
+    public SimpleGrammar(String path) {
+        readFromFile(path);
         setNullable();
     }
 
@@ -37,83 +43,115 @@ public class SimpleGrammar extends Grammar {
         if (symbol == null) {
             return null;
         }
-        Optional<NT> result = nonterminals.stream().filter(nt -> symbol.equals(nt.toString())).findFirst();
+        Optional<NT> result = rules.keySet().stream().filter(nt -> symbol.equals(nt.toString())).findFirst();
         if (result.isPresent()) {
             return result.get();
         } else {
             NT nt = new NT(symbol);
-            nonterminals.add(nt);
+            rules.put(nt, new ArrayList<>());
             return nt;
         }
     }
 
-    public void readFromFile(String path) {
-
-
-//        URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
-        try (
-                Stream<String> stream = Files.lines(Paths.get(path))) {
-            stream.parallel().filter(p -> !p.isEmpty() && !p.startsWith("#")).forEach(line -> {
-                Matcher ntMatcher = SPLIT_WITHOUT_QUOTES_PATTERN.matcher(line);
-                ArrayList<String> list = new ArrayList<>();
-                while (ntMatcher.find()) {
-                    list.add(ntMatcher.group(1));
-                }
-                if (LHS_RHS_DELIM.equals(list.get(1))) {    // Each lhs should be splitted from rhs by LHS_RHS_DELIM
-                    NT lhs = createOrGetNT(list.get(0));
-
-                    // Processing ot the right part of the rule like A -> B | C | D
-                    List<List<String>> rhs = list.stream()
-                            .skip(2) // skip lhs ->
-                            .collect(
-                                    () -> new ArrayList<List<String>>(Arrays.asList(new ArrayList<>())),
-                                    (sublist, s) -> {
-                                        if (RIGHT_PART_DELIM.equals(s)) {
-                                            sublist.add(new ArrayList<>());
-                                        } else {
-                                            sublist.get(sublist.size() - 1).add(s);
-                                        }
-                                    },
-                                    (list1, list2) -> {
-                                        // Simple merging of partial sublists would
-                                        // introduce a false level-break at the beginning.
-                                        list1.get(list1.size() - 1).addAll(list2.remove(0));
-                                        list1.addAll(list2);
-                                    });
-
-                    // Build rules
-                    List<Rule> lhsRules = rhs.parallelStream().filter(p -> !p.isEmpty()).map(sublist -> {
-                        return new Rule(lhs, sublist.stream().map(item -> {
-                            if (item.startsWith("\"") || item.startsWith("'")) {    // symbol is a terminal
-                                Matcher quoteMatcher = QUOTE_PATTERN.matcher(item);
-                                CharSequence terminal = quoteMatcher.replaceAll("");
-                                terminals.add(terminal);
-                                return terminal;
-                            } else {    // right part is a non-terminal
-                                return createOrGetNT(item);
-                            }
-                        }).toArray(CharSequence[]::new));
-                    }).collect(Collectors.toList());
-
-                    // Add rules to the grammar
-                    if (rules.containsKey(lhs)) {
-                        rules.get(lhs).addAll(lhsRules);
-                    } else {
-                        rules.put(lhs, lhsRules);
-                    }
-                } else {
-                    log.severe(() -> "Couldn't find '" + LHS_RHS_DELIM + "' in: " + line);
-                }
-            });
+    public void readResource(String path) {
+//        ClassLoader.getSystemClassLoader().getResourceAsStream(path)
+        try (InputStream inputStream = this.getClass().getResourceAsStream(path) ;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))) {
+            readFromStream(reader.lines());
         } catch (IOException e) {
             log.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
+    public void readFromBuffer(BufferedReader reader) {
+        try {
+            readFromStream(reader.lines());
+        }
+        finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void readFromStream(Stream<String> lines) {
+        rules.putAll(lines.parallel()
+                .filter(p -> !p.isEmpty() && !p.startsWith("#"))
+                .map(this::parseLine).collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> {
+                    List<Rule> both = new ArrayList<Rule>(a);
+                    both.addAll(b);
+                    return both;
+                })));
+    }
+
+    public void readFromFile(String path) {
+//        URL url = ClassLoader.getSystemClassLoader().getResource(fileName);
+        try (Stream<String> lines = Files.lines(Paths.get(path))) {
+            readFromStream(lines);
+        } catch (IOException e) {
+            log.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public Entry<NT, List<Rule>> parseLine(String line) {
+        Matcher ntMatcher = SPLIT_WITHOUT_QUOTES_PATTERN.matcher(line);
+        ArrayList<String> list = new ArrayList<>();
+        while (ntMatcher.find()) {
+            list.add(ntMatcher.group(1));
+        }
+
+        if (!LHS_RHS_DELIM.equals(list.get(1))) {    // Each lhs should be splitted from rhs by LHS_RHS_DELIM
+            log.severe(() -> "Couldn't find '" + LHS_RHS_DELIM + "' in: " + line);
+        }
+        NT lhs = createOrGetNT(list.get(0));
+
+        // Processing ot the right part of the rule like A -> B | C | D
+        List<List<String>> rhs = list.stream()
+                .skip(2) // skip lhs ->
+                .collect(
+                        () -> new ArrayList<List<String>>(Arrays.asList(new ArrayList<>())),
+                        (sublist, s) -> {
+                            if (RIGHT_PART_DELIM.equals(s)) {
+                                sublist.add(new ArrayList<>());
+                            } else {
+                                sublist.get(sublist.size() - 1).add(s);
+                            }
+                        },
+                        (list1, list2) -> {
+                            // Simple merging of partial sublists would
+                            // introduce a false level-break at the beginning.
+                            list1.get(list1.size() - 1).addAll(list2.remove(0));
+                            list1.addAll(list2);
+                        });
+
+        // Build rules
+        List<Rule> lhsRules = rhs.stream().filter(p -> !p.isEmpty()).map(sublist -> {
+            return new Rule(lhs, sublist.stream().map(item -> {
+                if (item.startsWith("\"") || item.startsWith("'")) {    // symbol is a terminal
+                    Matcher quoteMatcher = QUOTE_PATTERN.matcher(item);
+                    CharSequence terminal = quoteMatcher.replaceAll("");
+                    terminals.add(terminal);
+                    return terminal;
+                } else {    // right part is a non-terminal
+                    return createOrGetNT(item);
+                }
+            }).toArray(CharSequence[]::new));
+        }).collect(Collectors.toList());
+        return new AbstractMap.SimpleEntry<>(lhs, lhsRules);
+    }
+
+
     public void setNullable() {
+
+        if (!rules.containsKey(EPSILON)) {
+            // There are no epsilon rules in the grammar, we have nothing to do here
+            return;
+        }
+
         HashSet<NT> nullable = new HashSet<>();
-        int i;
-        int j;
+        int i, j;
         List<Rule> rules;
         Rule rule;
         NT lhs;
@@ -128,8 +166,6 @@ public class SimpleGrammar extends Grammar {
                         lhs.setNullable(true);
                         nullable.add(lhs);
                         rules.set(i, new Rule(lhs, new CharSequence[0]));
-//                        rules.remove(i);
-//                        i--;
                         break;
                     }
                 }
