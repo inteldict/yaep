@@ -4,8 +4,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Denis Krusko
@@ -13,15 +11,11 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractEarley implements IEarley {
 
-    public static final Rule INIT_RULE = new Rule(new NT("TOP"), new NT[]{new NT("S")});
-    public static final State INIT_STATE = new State(INIT_RULE, 0, 0);
-    public static final State FINAL_STATE = new State(AbstractEarley.INIT_RULE, 0, 1);
+    public NT startSymbol = new NT("S");
 
     protected static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     protected Grammar grammar;
     protected Chart[] charts;
-
-
 
     public AbstractEarley(Grammar grammar) {
         this.grammar = grammar;
@@ -34,9 +28,9 @@ public abstract class AbstractEarley implements IEarley {
      * @return charts
      * @see Chart[] parse(String[] words)
      */
-    public Chart[] parseOnTime(String[] words) {
+    public ChartManager parseOnTime(String[] words) {
         Instant start = Instant.now();
-        Chart[] result = parse(words);
+        ChartManager result = parse(words);
         Duration timeElapsed = Duration.between(start, Instant.now());
         log.info(() -> "Parsing time: " + timeElapsed.toMillis() + "ms");
         return result;
@@ -48,33 +42,43 @@ public abstract class AbstractEarley implements IEarley {
      * @param words
      * @return
      */
-    public Chart[] parse(String[] words) {
+    public ChartManager parse(String[] words) {
         init(words);
 
-        charts[0].addState(INIT_STATE);
-
+        predictor(startSymbol, 0);
         Chart currentChart;
-        for (int i = 0; i < words.length; i++) {
+        int i,j;
+        for (i = 0; i <= words.length; i++) {
             currentChart = charts[i];
-            for (int j = 0; j < currentChart.states.size(); j++) {
+            for (j = 0; j < currentChart.states.size(); j++) {
                 State st = currentChart.states.get(j);
                 if (st.isFinished()) {
                     completer(st, i);
-                } else if (st.isNextSymbolTerminal()) {
-                    scanner(st, i);
-                } else {
+                } else if (st.isNextSymbolNonterminal()) {
                     predictor(st, i);
+                } else if (i < words.length) { //do not call scanner for the last chart
+                    scanner(st, i);
                 }
             }
         }
-        currentChart = charts[words.length];
-        for (int j = 0; j < currentChart.states.size(); j++) {
-            State st = currentChart.states.get(j);
-            if (st.isFinished()) {
-                completer(st, words.length);
-            }
+        return new ChartManager(charts, startSymbol, words);
+    }
+
+    /**
+     * For the state in S(i) of the form (X → α • Y β, j), add (Y → • γ, i) to S(i) for every production in the grammar with Y on the left-hand side (Y → γ)
+     *
+     * @param lhs   - next Nonterminal after dot
+     * @param i     - state index
+     */
+    public void predictor(NT lhs, int i) {
+        List<Rule> rules = grammar.rules.get(lhs);
+        if (rules == null) {
+            log.severe(() -> "There is no " + lhs + " rule in the grammar");
+            System.exit(1);
         }
-        return charts;
+        for (Rule rule : rules) {
+            charts[i].addState(new State(rule, i, 0));
+        }
     }
 
     /**
@@ -85,14 +89,7 @@ public abstract class AbstractEarley implements IEarley {
      */
     public void predictor(State state, int i) {
         NT lhs = (NT) state.getNextSymbol();
-        List<Rule> rules = grammar.rules.get(lhs);
-        if (rules == null) {
-            log.severe(() -> "There is no " + lhs + " rule in the grammar");
-            System.exit(1);
-        }
-        for (Rule rule : rules) {
-            charts[i].addState(new State(rule, i, 0));
-        }
+        predictor(lhs, i);
         // Aycock and Horspool solution for epsilon rules
         if (lhs.isNullable()) {
             charts[i].addState(new State(state.rule, i, state.dot + 1));
@@ -118,13 +115,12 @@ public abstract class AbstractEarley implements IEarley {
         }
     }
 
-    public Chart[] recognize(String input) {
+    public ChartManager parse(String input) {
         if (input == null | input.isEmpty()) {
             throw new IllegalArgumentException("Parameter 'input' shouldn't be null or empty");
         }
         String[] tokens = YStringUtils.split(input);
-        Chart[] charts = parseOnTime(tokens);
-        return charts;
+        return parseOnTime(tokens);
     }
 
 /*

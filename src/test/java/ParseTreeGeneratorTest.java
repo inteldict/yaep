@@ -57,15 +57,14 @@ public class ParseTreeGeneratorTest {
 
     @Theory
     /**
-     * Check that recognition was successfull: last state in the chart
-     * is equals to FINAL_STATE. Check also first state in the chart
+     * Check that recognition was successfull: last contains at least one "final state".
+     * Check also first state in the chart
      * @param charts
      */
     public void simpleParseTest(Map.Entry<Integer, List<String>> sentence) {
-
-        Chart[] charts = parser.parse(sentence.getValue().toArray(new String[0]));
+        ChartManager chartManager = parser.parse(sentence.getValue().toArray(new String[0]));
         IParseTreeGenerator parseTreeGenerator = parser.buildTreeGenerator();
-        List<Node> trees = parseTreeGenerator.parseTreesOnTime();
+        List<Node> trees = parseTreeGenerator.parseTreesOnTime(chartManager);
         //check chart size
         assertThat("Number of trees:", trees.size(), equalTo(sentence.getKey()));
     }

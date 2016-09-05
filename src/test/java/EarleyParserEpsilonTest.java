@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Denis Krusko
@@ -24,7 +25,7 @@ public class EarleyParserEpsilonTest {
         return new EarleyParser(grammar);
     }
 
-    @Ignore("Parser need special technology to deal with left recursion\n")
+//    @Ignore("Parser need special technology to deal with left recursion\n")
     @Test
     public void leftRecursionTest() {
         EarleyParser parser = initParser("epsilon_a_left_recursion.txt");
@@ -37,20 +38,17 @@ public class EarleyParserEpsilonTest {
                 {"a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a"},};
         Stream.of(tokensArray).forEach(tokens -> {
 
-            Chart[] charts = parser.parse(tokens);
+            ChartManager chartManager = parser.parse(tokens);
+            System.out.println(Chart.prettyPrint(String.join(" ", tokens), chartManager.getCharts()));
             //check chart size
-            assertThat(charts.length, equalTo(tokens.length + 1));
+            assertThat(chartManager.getCharts().length, equalTo((int) (tokens.length + 1)));
 
-            State firstState = charts[0].getState(0);
-            assertThat(firstState, equalTo(AbstractEarley.INIT_STATE));
-
-            List<State> states = charts[charts.length - 1].states;
-            State lastState = states.get(states.size() - 1);
-            assertThat(lastState, equalTo(AbstractEarley.FINAL_STATE));
+            assertTrue(chartManager.initialStates().count() > 0);
+            assertTrue(chartManager.isRecognized());
         });
     }
 
-    @Ignore("Parser need special technology to deal with right recursion\n")
+//    @Ignore("Parser need special technology to deal with right recursion\n")
     @Test
     public void rightRecursionTest() {
         EarleyParser parser = initParser("epsilon_a_right_recursion.txt");
@@ -63,42 +61,33 @@ public class EarleyParserEpsilonTest {
                 {"a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a"},};
         Stream.of(tokensArray).forEach(tokens -> {
 
-            Chart[] charts = parser.parse(tokens);
+            ChartManager chartManager = parser.parse(tokens);
+            System.out.println(Chart.prettyPrint(String.join(" ", tokens), chartManager.getCharts()));
             //check chart size
-            assertThat(charts.length, equalTo(tokens.length + 1));
+            assertThat(chartManager.getCharts().length, equalTo((int) (tokens.length + 1)));
 
-            State firstState = charts[0].getState(0);
-            assertThat(firstState, equalTo(AbstractEarley.INIT_STATE));
-
-            List<State> states = charts[charts.length - 1].states;
-            State lastState = states.get(states.size() - 1);
-            assertThat(lastState, equalTo(AbstractEarley.FINAL_STATE));
+            assertTrue(chartManager.initialStates().count() > 0);
+            assertTrue(chartManager.isRecognized());
         });
     }
 
-    @Ignore("Parser need special technology to deal with left recursion\n")
+//    @Ignore("Parser need special technology to deal with left recursion\n")
     @Test
     public void epsilonABGrammarTest() {
         EarleyParser parser = initParser("epsilon_ab_grammar.txt");
         String[][] tokensArray = new String[][]{
-//                {"a", "b"},
-//                {"a", "a", "b",},
                 {"a", "a", "a", "b",},
-                {"a", "a", "a", "a", "b"},
-                {"a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "b"},};
+                {"a", "a", "a", "a", "a", "b"},
+                {"a", "a", "a", "a", "a", "a", "a", "a", "a", "b"},};
         Stream.of(tokensArray).forEach(tokens -> {
 
-            Chart[] charts = parser.parse(tokens);
-            System.out.println(Chart.prettyPrint(String.join(" ", tokens), charts));
+            ChartManager chartManager = parser.parse(tokens);
+            System.out.println(Chart.prettyPrint(String.join(" ", tokens), chartManager.getCharts()));
             //check chart size
-            assertThat(charts.length, equalTo(tokens.length + 1));
+            assertThat(chartManager.getCharts().length, equalTo((int) (tokens.length + 1)));
 
-            State firstState = charts[0].getState(0);
-            assertThat(firstState, equalTo(AbstractEarley.INIT_STATE));
-
-            List<State> states = charts[charts.length - 1].states;
-            State lastState = states.get(states.size() - 1);
-            assertThat(lastState, equalTo(AbstractEarley.FINAL_STATE));
+            assertTrue(chartManager.initialStates().count() > 0);
+            assertTrue(chartManager.isRecognized());
         });
     }
 }

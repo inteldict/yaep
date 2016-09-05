@@ -19,8 +19,12 @@ public class Rule {
 
     public boolean isTerminal(int index) {
         assert index >= 0 && index < rhs.length;
-
         return !(rhs[index] instanceof NT);
+    }
+
+    public boolean isNonterminal(int index) {
+        assert index >= 0 && index < rhs.length;
+        return (rhs[index] instanceof NT);
     }
 
     public CharSequence getSymbol(int index) {

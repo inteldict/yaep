@@ -13,8 +13,7 @@ import java.util.List;
  */
 public class ParseTreeGenerator extends AbstractParseTreeGenerator {
 
-    public ParseTreeGenerator(EarleyParser earleyParser) {
-        this.charts = earleyParser.charts;
+    public ParseTreeGenerator() {
     }
 
     public List<Node> buildTrees(ExtendedState state, HashSet<ExtendedState> parentStates) {

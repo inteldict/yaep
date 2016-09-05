@@ -1,9 +1,4 @@
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author Denis Krusko
@@ -37,7 +32,7 @@ public class PermutationEarleyParser extends AbstractEarley {
 
     @Override
     public IParseTreeGenerator buildTreeGenerator() {
-        return new PermutationParseTreeGenerator(this);
+        return new PermutationParseTreeGenerator(wordsMap);
     }
 
     /**
@@ -49,7 +44,7 @@ public class PermutationEarleyParser extends AbstractEarley {
     public void scanner(State state, int i) {
         // 1st: check if symbol in input
         if (wordsMap.containsKey(state.getNextSymbol())) {
-            charts[i + 1].addState(new State(state.rule, i, state.dot + 1));
+            charts[i + 1].addState(new State(state.rule, state.i, state.dot + 1));
         }
     }
 

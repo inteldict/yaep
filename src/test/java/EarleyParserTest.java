@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Denis Krusko
@@ -52,22 +53,18 @@ public class EarleyParserTest {
      */
     public void simpleParseTest(String[] tokens) {
 
-        Chart[] charts = parser.parse(tokens);
+        ChartManager chartManager = parser.parse(tokens);
+        System.out.println(Chart.prettyPrint(String.join(" ", tokens), chartManager.getCharts()));
         //check chart size
-        assertThat(charts.length, equalTo(tokens.length + 1));
-
-        State firstState = charts[0].getState(0);
-        assertThat(firstState, equalTo(AbstractEarley.INIT_STATE));
-
-        List<State> states = charts[charts.length - 1].states;
-        State lastState = states.get(states.size() - 1);
-        assertThat(lastState, equalTo(AbstractEarley.FINAL_STATE));
+        assertThat(chartManager.getCharts().length, equalTo(tokens.length + 1));
+        assertTrue(1 == chartManager.initialStates().count());
+        assertTrue(chartManager.isRecognized());
     }
 
     @Test
     public void simpleRecognizeTest() {
         String[] tokens = {"Mary", "called", "Jan"};
         //check chart size
-        assertThat(parser.recognize("Mary   called\tJan"), equalTo(parser.parse(tokens)));
+        assertThat(parser.parse("Mary   called\tJan"), equalTo(parser.parse(tokens)));
     }
 }

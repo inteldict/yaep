@@ -21,6 +21,10 @@ public class State {
         return rule.isTerminal(dot);
     }
 
+    public boolean isNextSymbolNonterminal() {
+        return rule.isNonterminal(dot);
+    }
+
     public CharSequence getNextSymbol() {
         return rule.getSymbol(dot);
     }

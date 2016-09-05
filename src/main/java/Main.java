@@ -61,16 +61,14 @@ public class Main {
 
         inputStream.
                 forEach(sentence -> {
-                    Chart[] charts = earleyParser.recognize(sentence);
-                    if (charts != null) {
-                        log.info(() -> Chart.prettyPrint(sentence ,charts));
-                        buildTrees(earleyParser.buildTreeGenerator());
-                    }
+                    ChartManager chartManager = earleyParser.parse(sentence);
+                    log.info(() -> Chart.prettyPrint(sentence, chartManager.getCharts()));
+                    buildTrees(earleyParser.buildTreeGenerator(), chartManager);
                 });
     }
 
-    public static List<Node> buildTrees(IParseTreeGenerator parseTreeGenerator) {
-        List<Node> trees = parseTreeGenerator.parseTreesOnTime();
+    public static List<Node> buildTrees(IParseTreeGenerator parseTreeGenerator, ChartManager chartManager) {
+        List<Node> trees = parseTreeGenerator.parseTreesOnTime(chartManager);
         log.info(() -> {
             StringBuilder treeOutput = new StringBuilder();
             for (Node tree : trees) {

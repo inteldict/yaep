@@ -17,9 +17,9 @@ public interface IEarley {
      * @param words tokenized input
      * @return
      */
-    Chart[] parse(String[] words);
+    ChartManager parse(String[] words);
 
-    Chart[] parseOnTime(String[] words);
+    ChartManager parseOnTime(String[] words);
 
     IParseTreeGenerator buildTreeGenerator();
 
@@ -28,5 +28,5 @@ public interface IEarley {
      * @param input sentence to be parsed
      * @return charts
      */
-    Chart[] recognize(String input);
+    ChartManager parse(String input);
 }

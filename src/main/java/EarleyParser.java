@@ -1,9 +1,3 @@
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 /**
  * @author Denis Krusko
  * @author e-mail: kruskod@gmail.com
@@ -26,7 +20,7 @@ public class EarleyParser extends AbstractEarley {
 
     @Override
     public IParseTreeGenerator buildTreeGenerator() {
-        return new ParseTreeGenerator(this);
+        return new ParseTreeGenerator();
     }
 
     /**
@@ -36,7 +30,7 @@ public class EarleyParser extends AbstractEarley {
      */
     public void scanner(State state, int i) {
         if (this.words[i].equals(state.getNextSymbol())) {
-            charts[i + 1].addState(new State(state.rule, i, state.dot + 1));
+            charts[i + 1].addState(new State(state.rule, state.i, state.dot + 1));
         }
     }
 }

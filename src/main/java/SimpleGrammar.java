@@ -39,7 +39,7 @@ public class SimpleGrammar extends Grammar {
         setNullable();
     }
 
-    private NT createOrGetNT(String symbol) {
+    private synchronized NT createOrGetNT(String symbol) {
         if (symbol == null) {
             return null;
         }

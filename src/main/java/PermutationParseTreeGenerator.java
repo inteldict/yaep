@@ -11,9 +11,8 @@ public class PermutationParseTreeGenerator extends AbstractParseTreeGenerator {
 
     private Map<CharSequence, Integer> wordsMap;
 
-    public PermutationParseTreeGenerator(PermutationEarleyParser parser) {
-        this.charts = parser.charts;
-        wordsMap = parser.getWordsMap();
+    public PermutationParseTreeGenerator(Map<CharSequence, Integer> wordsMap) {
+        this.wordsMap = wordsMap;
     }
 
     public List<Node> buildTrees(ExtendedState state, HashSet<ExtendedState> parentStates) {
